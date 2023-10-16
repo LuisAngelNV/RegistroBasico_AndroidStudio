@@ -62,11 +62,13 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/TxtInpNameUser"
+                    android:inputType="textPersonName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Nombre de usuario" />
                 <!-- android:background="@color/white"
-                     android:inputType="textEmailAddress" -->
+                     -->
 
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -90,11 +92,13 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtInpEmailUser"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
                     android:hint="Correo electronico" />
                 <!-- android:background="@color/white"
-                     android:inputType="textEmailAddress" -->
+                     -->
 
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -118,6 +122,7 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/TxtInpPasswordBoxOne"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Contraseña"
@@ -147,6 +152,7 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/TxtInpPasswordBoxTwo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Contraseña"
@@ -159,6 +165,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/BtnRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

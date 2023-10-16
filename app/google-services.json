@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "896382712017",
+    "project_id": "socialgame-49091",
+    "storage_bucket": "socialgame-49091.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:896382712017:android:a3c298edbc84a41f492df0",
+        "android_client_info": {
+          "package_name": "com.luisangelnv.socialgame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZdDzO76A8CP8qkMwhCvOIBvvPUBErPT4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
