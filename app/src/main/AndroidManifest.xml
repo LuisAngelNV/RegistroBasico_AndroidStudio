@@ -13,6 +13,11 @@
         android:theme="@style/Theme.SocialGame"
         tools:targetApi="31">
         <activity
+            android:name=".PageHome"
+            android:exported="false"
+            android:label="@string/title_activity_page_home"
+            android:theme="@style/Theme.SocialGame" />
+        <activity
             android:name=".PageRegister"
             android:exported="false" />
         <activity
