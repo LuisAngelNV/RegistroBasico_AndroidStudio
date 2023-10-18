@@ -1,9 +1,10 @@
-package com.luisangelnv.socialgame;
+package com.luisangelnv.socialgame.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +16,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.luisangelnv.socialgame.R;
+import com.luisangelnv.socialgame.models.User;
+import com.luisangelnv.socialgame.providers.AuthProviders;
+import com.luisangelnv.socialgame.providers.userProvider;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +32,9 @@ public class PageRegister extends AppCompatActivity {
     CircleImageView mcircleImageBack;
     TextInputEditText mTxtInpNameUser, mtxtInpEmailUser, mTxtInpPasswordBoxOne, mTxtInpPasswordBoxTwo;
     Button mBtnRegister;
-    FirebaseAuth mAut;
+    AuthProviders mAuthProvider;
+    userProvider mUsersProvider;
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -39,8 +48,8 @@ public class PageRegister extends AppCompatActivity {
         mTxtInpPasswordBoxOne = findViewById(R.id.TxtInpPasswordBoxOne);
         mTxtInpPasswordBoxTwo = findViewById(R.id.TxtInpPasswordBoxTwo);
         mBtnRegister = findViewById(R.id.BtnRegister);
-        mAut = FirebaseAuth.getInstance();
-
+        mAuthProvider = new AuthProviders();
+        mUsersProvider = new userProvider();
         mcircleImageBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,7 +75,7 @@ public class PageRegister extends AppCompatActivity {
             if (isEmailValid(userEmail)) {
                 if (boxPasswordOne.equals(boxPasswordTwo)) {
                     if (boxPasswordOne.length() >= 6) {
-                        CreateUser(userEmail, boxPasswordOne);
+                        CreateUser(userEmail, boxPasswordOne, userName);
                     } else {
                         Toast.makeText(this, "La contraseña debe tener más de 6 caracteres", Toast.LENGTH_LONG).show();
                     }
@@ -89,18 +98,35 @@ public class PageRegister extends AppCompatActivity {
         return matcher.matches();
     }
 
-    private void CreateUser(String email, String password) {
-        mAut.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+    private void CreateUser(String email, String password, String userName) {
+        mAuthProvider.Register(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(PageRegister.this, "El registro se ha completado", Toast.LENGTH_SHORT).show();
-                } else {
-                    Exception exception = task.getException();
-                    if (exception != null) {
-                        Toast.makeText(PageRegister.this, "El registro para el usuario.\r\n No se ha podido llevar a cabo. \r\n Intentar más tarde por favor\n\r"+ exception.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.d("Error", "Mensaje " + exception.getMessage());
-                    }
+                    String id = mAuthProvider.getUid();
+                    User user = new User();
+                    user.setId(id);
+                    user.setEmail(email);
+                    user.setUserName(userName);
+                    mUsersProvider.Create(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(PageRegister.this, "El registro se ha completado", Toast.LENGTH_SHORT).show();
+                                Intent intent  = new Intent(PageRegister.this, MainActivity.class);
+                                startActivity(intent);
+                            } else {
+                                Exception exception = task.getException();
+                                if (exception != null) {
+                                    Toast.makeText(PageRegister.this, "El registro para el usuario.\r\n No se ha podido llevar a cabo. \r\n Intentar más tarde por favor\n\r" + exception.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Log.d("Error", "Mensaje " + exception.getMessage());
+                                }
+
+                            }
+                        }
+                    });
+                }else {
+                    Toast.makeText(PageRegister.this, "No se pudo registrar el usuario", Toast.LENGTH_SHORT).show();
                 }
             }
         });

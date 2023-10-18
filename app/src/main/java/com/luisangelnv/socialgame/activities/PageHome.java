@@ -1,4 +1,4 @@
-package com.luisangelnv.socialgame;
+package com.luisangelnv.socialgame.activities;
 
 import android.os.Bundle;
 
@@ -14,6 +14,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.luisangelnv.socialgame.R;
 import com.luisangelnv.socialgame.databinding.ActivityPageHomeBinding;
 
 public class PageHome extends AppCompatActivity {

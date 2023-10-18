@@ -13,15 +13,15 @@
         android:theme="@style/Theme.SocialGame"
         tools:targetApi="31">
         <activity
-            android:name=".PageHome"
+            android:name=".activities.PageHome"
             android:exported="false"
             android:label="@string/title_activity_page_home"
             android:theme="@style/Theme.SocialGame" />
         <activity
-            android:name=".PageRegister"
+            android:name=".activities.PageRegister"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

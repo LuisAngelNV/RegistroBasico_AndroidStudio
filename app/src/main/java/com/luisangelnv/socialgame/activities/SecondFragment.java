@@ -1,4 +1,4 @@
-package com.luisangelnv.socialgame;
+package com.luisangelnv.socialgame.activities;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.luisangelnv.socialgame.R;
 import com.luisangelnv.socialgame.databinding.FragmentSecondBinding;
 
 public class SecondFragment extends Fragment {
