@@ -109,7 +109,8 @@
             android:layout_marginTop="40dp"
             android:layout_marginRight="20dp"
             android:backgroundTint="@color/red"
-            android:text="Iniciar sesion" />
+            android:text="Iniciar sesion"
+            android:textColor="@color/white"/>
 
         <!-- <com.google.android.gms.common.SignInButton
             android:id="@+id/BtnLoginGoogle"
