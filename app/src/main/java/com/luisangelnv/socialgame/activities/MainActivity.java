@@ -3,6 +3,7 @@ package com.luisangelnv.socialgame.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.luisangelnv.socialgame.R;
 import com.luisangelnv.socialgame.providers.AuthProviders;
 
+import dmax.dialog.SpotsDialog;
+
 public class MainActivity extends AppCompatActivity {
 
     TextView mtextViewPageRegister;
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     Button mBtnLogin;
     AuthProviders mAuthProvider;
     SignInButton mBtnLoginGoogle;
+    AlertDialog mDialog;
     //Google SignIn
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 9001;
@@ -41,7 +45,13 @@ public class MainActivity extends AppCompatActivity {
         mTextInputEmail = findViewById(R.id.TxtInputEmail);
         mTextInputPassword = findViewById(R.id.TxtInputPassword);
         mBtnLogin = findViewById(R.id.BtnLogin);
+
         mAuthProvider = new AuthProviders();
+
+        mDialog = new SpotsDialog.Builder()
+                .setContext(this)
+                .setMessage("Espere un momento, por favor...")
+                .setCancelable(false).build();
 
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,10 +72,12 @@ public class MainActivity extends AppCompatActivity {
     private void login(){
         String email = mTextInputEmail.getText().toString();
         String Password = mTextInputPassword.getText().toString();
+        mDialog.show();
         try {
             mAuthProvider.login(email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
+                    mDialog.dismiss();
                     if(task.isSuccessful()){
                         Toast.makeText(MainActivity.this, "Bienvenido", Toast.LENGTH_SHORT).show();
                         Intent intent  = new Intent(MainActivity.this, PageHome.class);

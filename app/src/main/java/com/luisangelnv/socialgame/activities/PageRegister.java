@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import dmax.dialog.SpotsDialog;
 
 public class PageRegister extends AppCompatActivity {
     CircleImageView mcircleImageBack;
@@ -34,6 +36,7 @@ public class PageRegister extends AppCompatActivity {
     Button mBtnRegister;
     AuthProviders mAuthProvider;
     userProvider mUsersProvider;
+    AlertDialog mDialog;
 
 
     @SuppressLint("MissingInflatedId")
@@ -50,6 +53,11 @@ public class PageRegister extends AppCompatActivity {
         mBtnRegister = findViewById(R.id.BtnRegister);
         mAuthProvider = new AuthProviders();
         mUsersProvider = new userProvider();
+        mDialog = new SpotsDialog.Builder()
+                .setContext(this)
+                .setMessage("Espere un momento, por favor...")
+                .setCancelable(false).build();
+
         mcircleImageBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,6 +107,7 @@ public class PageRegister extends AppCompatActivity {
     }
 
     private void CreateUser(String email, String password, String userName) {
+        mDialog.show();
         mAuthProvider.Register(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -111,9 +120,11 @@ public class PageRegister extends AppCompatActivity {
                     mUsersProvider.Create(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+                            mDialog.dismiss();
                             if (task.isSuccessful()) {
                                 Toast.makeText(PageRegister.this, "El registro se ha completado", Toast.LENGTH_SHORT).show();
                                 Intent intent  = new Intent(PageRegister.this, MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                             } else {
                                 Exception exception = task.getException();
@@ -126,6 +137,7 @@ public class PageRegister extends AppCompatActivity {
                         }
                     });
                 }else {
+                    mDialog.dismiss();
                     Toast.makeText(PageRegister.this, "No se pudo registrar el usuario", Toast.LENGTH_SHORT).show();
                 }
             }
