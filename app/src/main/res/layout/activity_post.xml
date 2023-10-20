@@ -5,6 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.Post">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,6 +49,7 @@
                     app:cardCornerRadius="10dp">
 
                     <ImageView
+                        android:id="@+id/ImageViewPost1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/upload_image"
@@ -56,6 +64,7 @@
                     app:cardCornerRadius="10dp">
 
                     <ImageView
+                        android:id="@+id/ImageViewPost2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/upload_image"
@@ -90,37 +99,8 @@
                     android:inputType="textPersonName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Nombre del juego" />
-                <!-- android:background="@color/white"
-                     -->
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="30dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/icon_money" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/TxtInputCost"
-                    android:inputType="numberSigned"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Costo" />
+                    android:hint="Nombre del juego"
+                    android:textColor="@color/black"/>
                 <!-- android:background="@color/white"
                      -->
 
@@ -151,7 +131,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Descripción"
-                    android:maxLines="4"/>
+                    android:maxLines="4"
+                    android:textColor="@color/black"/>
                 <!-- android:background="@color/white"
                      -->
 
