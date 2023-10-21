@@ -4,8 +4,6 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -14,27 +12,34 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.storage.UploadTask;
+import com.google.android.material.textfield.TextInputEditText;
 import com.luisangelnv.socialgame.R;
+import com.luisangelnv.socialgame.models.Publicaciones;
+import com.luisangelnv.socialgame.providers.AuthProviders;
 import com.luisangelnv.socialgame.providers.ImageProvider;
+import com.luisangelnv.socialgame.providers.PostProvider;
 import com.luisangelnv.socialgame.utils.FileUtil;
 
 import java.io.File;
+import java.util.Objects;
 
 public class Post extends AppCompatActivity {
 
     ImageProvider mImageProvider;
-    ImageView mImageViewPostOne;
-    private final int Gallery_Request_Code = 1;
+    ImageView mImageViewPostOne, mImageViewPC, mImageViewPS4, mImageViewXbox, mImageViewNintendo ;
     File mImageFile;
     Button mButtonPost;
+    TextInputEditText mTextInputTitle, mTextInputDescription;
+    TextView mTextViewCategory;
+    String mCategory = "", mTitle = "", mDescription = "";
+    PostProvider mPostProvider;
+    AuthProviders mAuthProvider;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,31 +48,75 @@ public class Post extends AppCompatActivity {
         mImageProvider = new ImageProvider();
         mImageViewPostOne = findViewById(R.id.ImageViewPost1);
         mButtonPost = findViewById(R.id.btnPost);
-        mButtonPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mTextInputTitle = findViewById(R.id.TxtInputVideoGame);
+        mTextInputDescription = findViewById(R.id.TxtInputDescription);
+        mImageViewPC = findViewById(R.id.ImageViewPC);
+        mImageViewPS4 = findViewById(R.id.ImageViewPS4);
+        mImageViewXbox = findViewById(R.id.ImageViewXbox);
+        mImageViewNintendo = findViewById(R.id.ImageViewNintendo);
+        mTextViewCategory = findViewById(R.id.TextViewCategory);
+        mButtonPost.setOnClickListener(v -> ClicPost());
+        mImageViewPostOne.setOnClickListener(view -> OpenGallery());
+        mImageViewPC.setOnClickListener(v -> {
+            mCategory= "PC";
+            mTextViewCategory.setText(mCategory);
+        });
+        mImageViewPS4.setOnClickListener(v -> {
+            mCategory = "PS4";
+            mTextViewCategory.setText(mCategory);
+        });
+        mImageViewXbox.setOnClickListener(v -> {
+            mCategory = "Xbox";
+            mTextViewCategory.setText(mCategory);
+        });
+        mImageViewNintendo.setOnClickListener(v -> {
+            mCategory = "Nintendo";
+            mTextViewCategory.setText(mCategory);
+        });
+        mPostProvider = new PostProvider();
+        mAuthProvider = new AuthProviders();
+    }
+
+
+
+    private void ClicPost() {
+        mTitle = Objects.requireNonNull(mTextInputTitle.getText()).toString();
+        mDescription = Objects.requireNonNull(mTextInputDescription.getText()).toString();
+        if (!mTitle.isEmpty() && !mDescription.isEmpty() && !mCategory.isEmpty()){
+            if (mImageFile != null){
                 saveImage();
+            }else{
+                Toast.makeText(this, "Debes seleccionar una imagen tu galeria patra continuar", Toast.LENGTH_SHORT).show();
             }
-        });
-        mImageViewPostOne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OpenGallery();
-            }
-        });
+        }else{
+            Toast.makeText(this, "Oh no!!!\r\nHas olvidado llenar alguno de los campos\r\nVerifcalos, por favor. 😁", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void saveImage() {
-        mImageProvider.save(Post.this, mImageFile).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(Post.this, "Carga exitosa", Toast.LENGTH_LONG).show();
-                    Log.d( "Campo", "Carga de imagen con exito al sistema");
-                }else{
-                    Toast.makeText(Post.this, "Hubo un error de carga", Toast.LENGTH_LONG).show();
-                    Log.d( "Campo", "Carga fallida, checar");
-                }
+        mImageProvider.save(Post.this, mImageFile).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
+                    String url = uri.toString();
+                    Publicaciones post = new Publicaciones();
+                    post.setImage1(url);
+                    post.setTitle(mTitle);
+                    post.setDescription(mDescription);
+                    post.setCategory(mCategory);
+                    post.setIdUser(mAuthProvider.getUid());
+                    mPostProvider.save(post).addOnCompleteListener(taskSave -> {
+                        if (taskSave.isSuccessful()){
+                            Toast.makeText(Post.this, "Muy bien, proceso finalizado", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(Post.this, "Algo no ha funcionado bien", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                });
+                Log.d( "Campo", "Carga de imagen con exito al sistema");
+            }else{
+                Toast.makeText(Post.this, "Hubo un error de carga", Toast.LENGTH_LONG).show();
+                Log.d( "Campo", "Carga fallida, checar");
             }
         });
     }
@@ -96,6 +145,7 @@ public class Post extends AppCompatActivity {
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode()== Activity.RESULT_OK){
                         try {
+                            assert result.getData() != null;
                             mImageFile = FileUtil.from(Post.this, result.getData().getData());
                             mImageViewPostOne.setImageBitmap(BitmapFactory.decodeFile(mImageFile.getAbsolutePath()));
                         } catch (Exception e) {
@@ -105,5 +155,4 @@ public class Post extends AppCompatActivity {
                 }
             }
     );
-
 }

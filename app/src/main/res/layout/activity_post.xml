@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/TxtInputVideoGAme"
+                    android:id="@+id/TxtInputVideoGame"
                     android:inputType="textPersonName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -139,6 +139,7 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
         <TextView
+            android:id="@+id/TextViewCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Categorias"
@@ -176,6 +177,7 @@
                     app:cardCornerRadius="10dp"
                     app:cardElevation="10dp">
                     <ImageView
+                        android:id="@+id/ImageViewPC"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/icon_pc"/>
@@ -206,6 +208,7 @@
                     app:cardCornerRadius="10dp"
                     app:cardElevation="10dp">
                     <ImageView
+                        android:id="@+id/ImageViewPS4"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/icon_ps4"/>
@@ -236,6 +239,7 @@
                     app:cardCornerRadius="10dp"
                     app:cardElevation="10dp">
                     <ImageView
+                        android:id="@+id/ImageViewXbox"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/icon_xbox"
@@ -267,6 +271,7 @@
                     app:cardCornerRadius="10dp"
                     app:cardElevation="10dp">
                     <ImageView
+                        android:id="@+id/ImageViewNintendo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/icon_nintendo"/>
