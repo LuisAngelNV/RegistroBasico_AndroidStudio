@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".fragments.Home"
     android:layout_marginBottom="65dp">
+    <include layout="@layout/action_bar_toolbar"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/FAB"

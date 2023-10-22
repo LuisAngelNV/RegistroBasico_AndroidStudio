@@ -20,7 +20,10 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.luisangelnv.socialgame.R;
+import com.luisangelnv.socialgame.fragments.Home;
 import com.luisangelnv.socialgame.providers.AuthProviders;
+
+import java.util.Objects;
 
 import dmax.dialog.SpotsDialog;
 
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 9001;
     private GoogleSignInClient mGoogleSignInClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,38 +57,37 @@ public class MainActivity extends AppCompatActivity {
                 .setMessage("Espere un momento, por favor...")
                 .setCancelable(false).build();
 
-        mBtnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                login();
-            }
-        });
+        mBtnLogin.setOnClickListener(view -> login());
 
-        mtextViewPageRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, PageRegister.class);
-                startActivity(intent);
-            }
+        mtextViewPageRegister.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, PageRegister.class);
+            startActivity(intent);
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(mAuthProvider.getUserSession() != null){
+            Intent intent = new Intent(MainActivity.this, PageHome.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+    }
+
     private void login(){
-        String email = mTextInputEmail.getText().toString();
-        String Password = mTextInputPassword.getText().toString();
+        String email = Objects.requireNonNull(mTextInputEmail.getText()).toString();
+        String Password = Objects.requireNonNull(mTextInputPassword.getText()).toString();
         mDialog.show();
         try {
-            mAuthProvider.login(email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    mDialog.dismiss();
-                    if(task.isSuccessful()){
-                        Toast.makeText(MainActivity.this, "Bienvenido", Toast.LENGTH_SHORT).show();
-                        Intent intent  = new Intent(MainActivity.this, PageHome.class);
-                        startActivity(intent);
-                    }else{
-                        Toast.makeText(MainActivity.this, "Oh no!!!\n\rAlgún campo de usuario o contraseña es incorrecto", Toast.LENGTH_SHORT).show();
-                    }
+            mAuthProvider.login(email, Password).addOnCompleteListener(task -> {
+                mDialog.dismiss();
+                if(task.isSuccessful()){
+                    Toast.makeText(MainActivity.this, "Bienvenido", Toast.LENGTH_SHORT).show();
+                    Intent intent  = new Intent(MainActivity.this, PageHome.class);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(MainActivity.this, "Oh no!!!\n\rAlgún campo de usuario o contraseña es incorrecto", Toast.LENGTH_SHORT).show();
                 }
             });
             Log.d( "Campo", "Email "+ email);
