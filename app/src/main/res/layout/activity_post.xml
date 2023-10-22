@@ -302,4 +302,11 @@
         android:layout_margin="20dp"
         android:textColor="@color/white"/>
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circleImageBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/icon_arrow_left"
+        android:layout_margin="15dp"/>
+
   </androidx.coordinatorlayout.widget.CoordinatorLayout>
